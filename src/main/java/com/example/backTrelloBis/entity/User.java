@@ -16,9 +16,16 @@ public class User {
     private ObjectId id;
     private String nom;
     private String prenom;
-    public User(ObjectId id,String nom, String prenom) {
+    private String email;
+    private String pseudo;
+    private String password;
+
+    public User(ObjectId id,String nom, String prenom, String email, String pseudo, String password) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
+        this.email= email;
+        this.pseudo = pseudo;
+        this.password = password;
     }
 }

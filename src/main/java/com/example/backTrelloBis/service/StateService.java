@@ -13,15 +13,11 @@ import java.util.Optional;
 public class StateService {
 
     private final StateRepository stateRepository;
-
     public StateService(StateRepository stateRepository) {
         this.stateRepository = stateRepository;
     }
-
     public Iterable<State> getAllState(){return stateRepository.findAll();}
-
     public Optional<State> getStateById(final ObjectId id_state){return stateRepository.findById(id_state);}
-
     public State saveState(State state){
         return stateRepository.save(state);
     }

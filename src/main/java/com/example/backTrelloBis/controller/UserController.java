@@ -1,5 +1,6 @@
 package com.example.backTrelloBis.controller;
 
+import com.example.backTrelloBis.entity.Task;
 import com.example.backTrelloBis.entity.User;
 import com.example.backTrelloBis.service.UserService;
 import org.apache.logging.log4j.spi.ObjectThreadContextMap;
@@ -25,6 +26,9 @@ public class UserController {
 
     @GetMapping("/{id_user}")
     public Optional<User> getUserById(@PathVariable final ObjectId id_user){return userService.getUserById(id_user);}
+
+    @PostMapping("")
+    public User createUser(@RequestBody User user){return userService.saveUser(user);}
 
     @DeleteMapping("/{id_user}")
     public void deleteUser(@PathVariable final ObjectId id_user){
