@@ -1,11 +1,11 @@
 package com.example.backTrelloBis.service;
 
+import com.example.backTrelloBis.config.Role;
 import com.example.backTrelloBis.entity.User;
 import com.example.backTrelloBis.exception.UserResourceException;
 import com.example.backTrelloBis.repository.UserRepository;
-import com.example.backTrelloBis.util.response.form.RegisterRequest;
+import com.example.backTrelloBis.util.form.RegisterRequest;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,6 @@ import java.util.Optional;
 
 @Data
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
@@ -24,7 +23,7 @@ public class UserService {
     public Optional<User> getUserById(final ObjectId id_user){return userRepository.findById(id_user);}
 
     public User createUser(RegisterRequest registerRequest){
-        User user = new User(null, registerRequest.getNom(), registerRequest.getPrenom(), registerRequest.getEmail(), registerRequest.getPseudo(), registerRequest.getPassword());
+        User user = new User(null, registerRequest.getNom(), registerRequest.getPrenom(), registerRequest.getEmail(), registerRequest.getPseudo(), registerRequest.getPassword(), Role.ROLE_USER);
         try {
             return this.userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
@@ -40,8 +39,9 @@ public class UserService {
         Optional<User> user = this.userRepository.findByEmail(email);
         if (user.isPresent()) {
             return user.get();
+        } else {
+            throw new UserResourceException("UserNotFound", "Username not found in database", HttpStatus.NOT_FOUND);
         }
-        return null;
     }
 
     public void deleteUser(final ObjectId id_user){

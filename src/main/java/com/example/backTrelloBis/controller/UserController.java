@@ -2,7 +2,7 @@ package com.example.backTrelloBis.controller;
 
 import com.example.backTrelloBis.entity.User;
 import com.example.backTrelloBis.service.UserService;
-import com.example.backTrelloBis.util.response.form.RegisterRequest;
+import com.example.backTrelloBis.util.form.RegisterRequest;
 import org.bson.types.ObjectId;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.RolesAllowed;

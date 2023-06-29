@@ -1,4 +1,4 @@
-package com.example.backTrelloBis.util.response.form;
+package com.example.backTrelloBis.util.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -6,6 +6,7 @@ import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Data
@@ -18,7 +19,7 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public Iterable<Task> getAllTask(){return taskRepository.findAll();}
+    public List<Task> getAllTask(){return taskRepository.findAll();}
 
     public Optional<Task> getTaskById(final ObjectId id_task){return taskRepository.findById(id_task);}
 

@@ -3,9 +3,11 @@ package com.example.backTrelloBis.controller;
 import com.example.backTrelloBis.entity.Task;
 import com.example.backTrelloBis.service.TaskService;
 import org.bson.types.ObjectId;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -21,7 +23,7 @@ public class TaskController {
 
     @RolesAllowed("USER")
     @GetMapping()
-    public Iterable<Task> getAllTask(){return taskService.getAllTask();}
+    public ResponseEntity<List<Task>> getAllTask(){return ResponseEntity.ok().body(taskService.getAllTask());}
     @RolesAllowed("USER")
     @GetMapping("/{id_task}")
     public Optional<Task> getTaskById(@PathVariable final ObjectId id_task){return taskService.getTaskById(id_task);}

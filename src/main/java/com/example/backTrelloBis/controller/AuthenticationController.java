@@ -1,10 +1,10 @@
 package com.example.backTrelloBis.controller;
 
-import com.example.backTrelloBis.util.response.form.AuthenticationRequest;
+import com.example.backTrelloBis.util.form.AuthenticationRequest;
 import com.example.backTrelloBis.exception.UserResourceException;
 import com.example.backTrelloBis.service.AuthService;
 import com.example.backTrelloBis.util.response.AuthResponse;
-import com.example.backTrelloBis.util.response.form.RegisterRequest;
+import com.example.backTrelloBis.util.form.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

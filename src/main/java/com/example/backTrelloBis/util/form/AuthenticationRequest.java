@@ -1,7 +1,5 @@
-package com.example.backTrelloBis.util.response.form;
+package com.example.backTrelloBis.util.form;
 
-
-import com.example.backTrelloBis.util.response.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

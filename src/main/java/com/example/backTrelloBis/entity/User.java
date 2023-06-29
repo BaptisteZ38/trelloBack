@@ -4,14 +4,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
+import com.example.backTrelloBis.config.Role;
 
 @Data
 @Document("user")
@@ -23,14 +22,16 @@ public class User implements UserDetails {
     private String email;
     private String pseudo;
     private String password;
+    private Role role;
 
-    public User(ObjectId id,String nom, String prenom, String email, String pseudo, String password) {
+    public User(ObjectId id,String nom, String prenom, String email, String pseudo, String password, Role role) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.email= email;
         this.pseudo = pseudo;
         this.password = password;
+        this.role = role;
     }
 
     @Override
