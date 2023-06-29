@@ -1,14 +1,17 @@
 package com.example.backTrelloBis.controller;
 
-import com.example.backTrelloBis.config.JwtUtils;
-import com.example.backTrelloBis.dto.AuthenticationRequest;
-import com.example.backTrelloBis.service.UserService;
+import com.example.backTrelloBis.util.response.form.AuthenticationRequest;
+import com.example.backTrelloBis.exception.UserResourceException;
+import com.example.backTrelloBis.service.AuthService;
+import com.example.backTrelloBis.util.response.AuthResponse;
+import com.example.backTrelloBis.util.response.form.RegisterRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("auth")
@@ -16,22 +19,29 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-    private final AuthenticationManager authenticationManager;
+    private final AuthService authService;
 
-    private final UserService userService;
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
 
-    private final JwtUtils jwtUtils;
-
-    @PostMapping("authenticate")
-    public ResponseEntity<String> authenticate(@RequestBody AuthenticationRequest request){
-        authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
-        final UserDetails user = userService.findUserByEmail(request.getEmail());
-        if(user != null){
-            return ResponseEntity.ok(jwtUtils.generateToken(user));
+        if (authenticationRequest.containsNullEntry()) {
+            throw new UserResourceException("BadRequest", "Set email and password for login", HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.status(400).body("Une erreur est survenue");
+
+        return ResponseEntity.ok().body(this.authService.login(authenticationRequest));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
+
+        if (registerRequest.containsNullEntry()) {
+            throw new UserResourceException("BadRequest", "Set name, lastname, pseudo, email and password for register",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/auth/register").toUriString());
+
+        return ResponseEntity.created(uri).body(this.authService.register(registerRequest));
     }
 
 }

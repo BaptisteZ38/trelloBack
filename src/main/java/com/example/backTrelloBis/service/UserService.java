@@ -1,48 +1,47 @@
 package com.example.backTrelloBis.service;
 
-import com.example.backTrelloBis.entity.Task;
 import com.example.backTrelloBis.entity.User;
+import com.example.backTrelloBis.exception.UserResourceException;
 import com.example.backTrelloBis.repository.UserRepository;
-import com.sun.tools.jconsole.JConsoleContext;
+import com.example.backTrelloBis.util.response.form.RegisterRequest;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Data
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
     public Iterable<User> getAllUser(){return userRepository.findAll();}
 
     public Optional<User> getUserById(final ObjectId id_user){return userRepository.findById(id_user);}
 
-    public User saveUser(User user){return userRepository.save(user);}
+    public User createUser(RegisterRequest registerRequest){
+        User user = new User(null, registerRequest.getNom(), registerRequest.getPrenom(), registerRequest.getEmail(), registerRequest.getPseudo(), registerRequest.getPassword());
+        try {
+            return this.userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new UserResourceException("UserAlreadyExists", "The user " + user.getEmail() + " already exists.",
+                    HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            throw new UserResourceException("CreateUserError", "Error while creating the user: " + user.getEmail(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-    public UserDetails findUserByEmail(String email) {
-        User user = (User) userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Pas d'utilisateur trouvé"));
-
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER")); // Ajoutez les rôles nécessaires ici
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                authorities
-        );
+    public User getUserByEmail(String email) {
+        Optional<User> user = this.userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            return user.get();
+        }
+        return null;
     }
 
     public void deleteUser(final ObjectId id_user){

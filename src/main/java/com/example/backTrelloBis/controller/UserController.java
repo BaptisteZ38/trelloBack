@@ -1,13 +1,11 @@
 package com.example.backTrelloBis.controller;
 
-import com.example.backTrelloBis.entity.Task;
 import com.example.backTrelloBis.entity.User;
 import com.example.backTrelloBis.service.UserService;
-import org.apache.logging.log4j.spi.ObjectThreadContextMap;
+import com.example.backTrelloBis.util.response.form.RegisterRequest;
 import org.bson.types.ObjectId;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-
+import javax.annotation.security.RolesAllowed;
 import java.util.Optional;
 
 @RestController
@@ -20,16 +18,16 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
+    @RolesAllowed("USER")
     @GetMapping()
     public Iterable<User> getAllUser(){return userService.getAllUser();}
-
+    @RolesAllowed("USER")
     @GetMapping("/{id_user}")
     public Optional<User> getUserById(@PathVariable final ObjectId id_user){return userService.getUserById(id_user);}
-
+    @RolesAllowed("USER")
     @PostMapping("")
-    public User createUser(@RequestBody User user){return userService.saveUser(user);}
-
+    public User createUser(@RequestBody RegisterRequest registerRequest){return userService.createUser(registerRequest);}
+    @RolesAllowed("USER")
     @DeleteMapping("/{id_user}")
     public void deleteUser(@PathVariable final ObjectId id_user){
         userService.deleteUser(id_user);
