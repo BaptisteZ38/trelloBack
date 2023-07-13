@@ -33,4 +33,30 @@ public class UserController {
         userService.deleteUser(id_user);
     }
 
+    @RolesAllowed("USER")
+    @PutMapping("/{id_user}")
+    public User updateUser(@PathVariable final ObjectId id_user, @RequestBody User user){
+        Optional<User> userToUpdate = userService.getUserById(id_user);
+        if(userToUpdate.isPresent()){
+            User currentUser = userToUpdate.get();
+            String nom = user.getNom();
+            String prenom = user.getPrenom();
+            String pseudo = user.getPseudo();
+
+            if(nom != null){
+                currentUser.setNom(nom);
+            }
+            if(prenom != null){
+                currentUser.setPrenom(prenom);
+            }
+            if(pseudo != null){
+                currentUser.setPseudo(pseudo);
+            }
+            userService.saveUser(currentUser);
+            return currentUser;
+        }else {
+            return null;
+        }
+    }
+
 }
